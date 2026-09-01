@@ -7,9 +7,9 @@ pipeline {
     }
 
     environment {
-        GIT_URL        = 'http://localhost:3000/jaya/VendorService.git'
-        GIT_BRANCH     = 'main'
-        GIT_CRED_ID    = 'gitea-cred'
+        GIT_URL        = 'https://github.com/rahuljenaa/vendorService.git'
+        GIT_BRANCH     = 'develop'
+        GIT_CRED_ID    = 'github-cred'
 
         TOMCAT_URL     = 'http://10.1.0.27:8081'
         TOMCAT_CONTEXT = '/vendor'
