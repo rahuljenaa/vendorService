@@ -20,6 +20,7 @@
     <properties>
         <java.version>17</java.version>
         <sonar.exclusions>.mvn/**</sonar.exclusions>
+        <sonar.cpd.exclusions>**/business/bean/**,**/entity/**</sonar.cpd.exclusions>
     </properties>
 
     <name>vendorservice</name>
