@@ -47,13 +47,14 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: "${SONAR_CRED_ID}", variable: 'SONAR_TOKEN')]) {
-                    sh """
-                    mvn sonar:sonar \
+                    sh '''
+                    mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
                     -Dsonar.host.url=${SONAR_HOST_URL} \
+                    -Dsonar.token=${SONAR_TOKEN} \
                     -Dsonar.login=${SONAR_TOKEN} \
                     -Dsonar.projectKey=vendorservice \
                     -Dsonar.projectName=vendorservice
-                    """
+                    '''
                 }
             }
         }
@@ -66,11 +67,11 @@ pipeline {
                     passwordVariable: 'TC_PASS'
                 )]) {
 
-                    sh """
-                    curl -v -u ${TC_USER}:${TC_PASS} \
+                    sh '''
+                    curl -v -u "${TC_USER}:${TC_PASS}" \
                     -T "${WAR_FILE}" \
                     "${TOMCAT_URL}/manager/text/deploy?path=${TOMCAT_CONTEXT}&update=true"
-                    """
+                    '''
                 }
             }
         }
