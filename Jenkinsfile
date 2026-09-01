@@ -1,23 +1,18 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Apache Maven 3.9.3'
-        jdk   'OpenJDK-21'
-    }
-
     environment {
         GIT_URL        = 'https://github.com/rahuljenaa/vendorService.git'
         GIT_BRANCH     = 'develop'
         GIT_CRED_ID    = 'github-cred'
 
-        TOMCAT_URL     = 'http://10.1.0.27:8081'
+        TOMCAT_URL     = 'http://localhost:8081'
         TOMCAT_CONTEXT = '/vendor'
         TOMCAT_CRED_ID = 'tomcat-cred'
 
-        WAR_FILE       = 'target\\vendor.war'
+        WAR_FILE       = 'target/vendor.war'
 
-        SONAR_HOST_URL = 'http://10.1.0.27:9000'
+        SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_CRED_ID  = 'sonar-token'
     }
 
@@ -33,13 +28,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvn clean package -DskipTests'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                bat 'mvn test'
+                sh 'mvn test'
             }
             post {
                 always {
@@ -52,11 +47,11 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: "${SONAR_CRED_ID}", variable: 'SONAR_TOKEN')]) {
-                    bat """
-                    mvn sonar:sonar ^
-                    -Dsonar.host.url=%SONAR_HOST_URL% ^
-                    -Dsonar.login=%SONAR_TOKEN% ^
-                    -Dsonar.projectKey=vendorservice ^
+                    sh """
+                    mvn sonar:sonar \
+                    -Dsonar.host.url=${SONAR_HOST_URL} \
+                    -Dsonar.login=${SONAR_TOKEN} \
+                    -Dsonar.projectKey=vendorservice \
                     -Dsonar.projectName=vendorservice
                     """
                 }
@@ -71,10 +66,10 @@ pipeline {
                     passwordVariable: 'TC_PASS'
                 )]) {
 
-                    bat """
-                    curl -v -u %TC_USER%:%TC_PASS% ^
-                    -T "${WAR_FILE}" ^
-                    "%TOMCAT_URL%/manager/text/deploy?path=${TOMCAT_CONTEXT}&update=true"
+                    sh """
+                    curl -v -u ${TC_USER}:${TC_PASS} \
+                    -T "${WAR_FILE}" \
+                    "${TOMCAT_URL}/manager/text/deploy?path=${TOMCAT_CONTEXT}&update=true"
                     """
                 }
             }
