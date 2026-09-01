@@ -19,6 +19,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <sonar.exclusions>.mvn/**</sonar.exclusions>
     </properties>
 
     <name>vendorservice</name>
