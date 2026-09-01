@@ -14,7 +14,7 @@ import com.training.controller.VendorController;
 import com.training.service.VendorService;
 
 @WebMvcTest(VendorController.class)
-public class VendorControllerTest {
+class VendorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -23,7 +23,7 @@ public class VendorControllerTest {
     private VendorService vendorServiceMock;
 
     @Test
-    public void indexVendorControllerTest() throws Exception {
+    void indexVendorControllerTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                .andExpect(status().isOk())
